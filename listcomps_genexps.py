@@ -47,10 +47,25 @@ metro_areas = [
 # https://docs.python.org/3.5/library/string.html#formatspec
 
 # Defining and using a named tuple
+
+# Instances of classes built with named tuples take exactly the same amount of memory as tuples because the field names are stored in the class. They use less memory than a regular object because they don't store attributes in a per-instance dict.
+
+
 from collections import namedtuple
 City = namedtuple('City', 'name country population coordinates')
-tokyo = City('Tokyo', 'JP', 36.933, (35.689722, 139.691667))
-print(tokyo)
-print(tokyo.population)
-print(tokyo.coordinates)
-print[tokyo[1]]
+# tokyo = City('Tokyo', 'JP', 36.933, (35.689722, 139.691667))
+# print(tokyo)
+# print(tokyo.population)
+# print(tokyo.coordinates)
+# print[tokyo[1]]
+
+City._fields # _fields is a tuple with the field nmes of the class
+LatLong = namedtuple('LatLong', 'lat long')
+dehli_data = ('Dehli NCR','IN', 21.935, LatLong(28.613889, 77.208889))
+
+delhi = City._make(dehli_data) # _make() allow you to instatiate a named tuple from an iterable; City(*delhi_data) would do the same.
+
+# print delhi._asdict() # returns collections.OrderedDict built froom the named tuple instance. That can be used to produce a nice display of city data.
+
+for key, value in delhi._asdict().items():
+    print(key + ":", value)
