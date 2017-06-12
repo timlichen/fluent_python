@@ -134,12 +134,25 @@ weird_board[1][2] = '0'
 # print(weird_board)
 
 # A += assignment puzzler...
-t = (1,2,[30, 40])
-t[2] += [50, 60]
-# In python shell, this code results in a tuple object does not support item assignment, but the list at t[2] still gets modified. You can modify this with t[2].extend[50, 60] to make the change without an error
+# t = (1,2,[30, 40])
+# t[2] += [50, 60]
 # print(t)
+
+# In python shell, this code results in a tuple object does not support item assignment, but the list at t[2] still gets modified. You can modify this with t[2].extend[50, 60] to make the change without an error
+
+# putting mutable items in tuples is not a good idea.
+# augmented assignment is not an atomic operation -- we just saw it throwing it an excepton after doing part of the job.
+# inspecting Python bytecode is not too difficut, and is often helpful to see what is going on under the hood.
+
 
 ################################################################################
 # This is a great tool to use with students to help breakdown and explain code!
 # http://pythontutor.com/visualize.html#mode=edit
 ################################################################################
+
+fruits = ["grapes", "strawberries", "oranges", "apples"]
+print sorted(fruits)
+print sorted(fruits, key=len, reverse=True)
+print fruits # sorted is not done in place, but return a new list.
+print fruits.sort() # python convention is for methods are operate in place to return None
+print fruits
