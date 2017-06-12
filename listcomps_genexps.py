@@ -67,5 +67,56 @@ delhi = City._make(dehli_data) # _make() allow you to instatiate a named tuple f
 
 # print delhi._asdict() # returns collections.OrderedDict built froom the named tuple instance. That can be used to produce a nice display of city data.
 
-for key, value in delhi._asdict().items():
-    print(key + ":", value)
+# for key, value in delhi._asdict().items():
+    # print(key + ":", value)
+
+# Tuple as immutable lists.
+
+# Tuples support all list methods except those that add or remove, one exception to this rule is the lack of __reversed__ support. This is just for optimiation reversed(my_tuple) works without it.
+
+# Slice!
+
+# seq.__getitem__(slice(start, stop, step))
+
+s = 'bicycle'
+# print(s[::3])
+# print (s[::1]) # 1 step
+# print (s[::-1]) # 1 step - reversed
+# print (s[::2])
+# print (s[::-2]) # remove
+
+l = list(range(10))
+print(l)
+
+l[2:5] = [20,30]
+print(l)
+
+del l[5:7]
+print(l)
+
+l[3::2] = [11,12]
+print(l)
+
+# When the target of the assignment is a slice, the right side must be an iterable object, even if it's just one item.
+
+my_sub_list = ["a"]
+print(hex(id(my_sub_list)))
+my_list = [my_sub_list]
+operated_list = my_list * 3
+
+# print(hex(id(operated_list[1]))) # internal lists referece all reference to the same list.
+
+# operated_list[1][0] = "zzz" # this changes the value for all lists since they are all referenced to the same list.
+# print operated_list
+
+# Building a list of lists
+
+board = [['_'] * 3 for i in range(3)] # right
+print(board)
+board[1][2] = '0'
+print(board)
+
+weird_board = [['_'] * 3] * 3 # wrong
+print(weird_board)
+weird_board[1][2] = '0'
+print(weird_board)
