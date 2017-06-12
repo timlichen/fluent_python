@@ -86,21 +86,21 @@ s = 'bicycle'
 # print (s[::-2]) # remove
 
 l = list(range(10))
-print(l)
+# print(l)
 
 l[2:5] = [20,30]
-print(l)
+# print(l)
 
 del l[5:7]
-print(l)
+# print(l)
 
 l[3::2] = [11,12]
-print(l)
+# print(l)
 
 # When the target of the assignment is a slice, the right side must be an iterable object, even if it's just one item.
 
 my_sub_list = ["a"]
-print(hex(id(my_sub_list)))
+# print(hex(id(my_sub_list)))
 my_list = [my_sub_list]
 operated_list = my_list * 3
 
@@ -112,11 +112,34 @@ operated_list = my_list * 3
 # Building a list of lists
 
 board = [['_'] * 3 for i in range(3)] # right
-print(board)
+
+# board = []
+# for i in range(3):
+    # row = ['_'] * 3
+    # board.append(row)
+
+# print(board)
 board[1][2] = '0'
-print(board)
+# print(board)
 
 weird_board = [['_'] * 3] * 3 # wrong
-print(weird_board)
+
+# row = ['_']
+# board = []
+# for i in range(3):
+#     board.append(row)
+
+# print(weird_board)
 weird_board[1][2] = '0'
-print(weird_board)
+# print(weird_board)
+
+# A += assignment puzzler...
+t = (1,2,[30, 40])
+t[2] += [50, 60]
+# In python shell, this code results in a tuple object does not support item assignment, but the list at t[2] still gets modified. You can modify this with t[2].extend[50, 60] to make the change without an error
+# print(t)
+
+################################################################################
+# This is a great tool to use with students to help breakdown and explain code!
+# http://pythontutor.com/visualize.html#mode=edit
+################################################################################
