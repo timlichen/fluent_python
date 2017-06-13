@@ -48,22 +48,25 @@ metro_areas = [
 
 # Defining and using a named tuple
 
-# Instances of classes built with named tuples take exactly the same amount of memory as tuples because the field names are stored in the class. They use less memory than a regular object because they don't store attributes in a per-instance dict.
+'''
+Instances of classes built with named tuples take exactly the same amount of memory as tuples because the field names are stored in the class. They use less memory than a regular object because they don't store attributes in a per-instance dict.
+'''
 
-
+'''
 from collections import namedtuple
 City = namedtuple('City', 'name country population coordinates')
-# tokyo = City('Tokyo', 'JP', 36.933, (35.689722, 139.691667))
-# print(tokyo)
-# print(tokyo.population)
-# print(tokyo.coordinates)
-# print[tokyo[1]]
+tokyo = City('Tokyo', 'JP', 36.933, (35.689722, 139.691667))
+print(tokyo)
+print(tokyo.population)
+print(tokyo.coordinates)
+print[tokyo[1]]
+'''
 
-City._fields # _fields is a tuple with the field nmes of the class
-LatLong = namedtuple('LatLong', 'lat long')
-dehli_data = ('Dehli NCR','IN', 21.935, LatLong(28.613889, 77.208889))
+# City._fields # _fields is a tuple with the field nmes of the class
+# LatLong = namedtuple('LatLong', 'lat long')
+# dehli_data = ('Dehli NCR','IN', 21.935, LatLong(28.613889, 77.208889))
 
-delhi = City._make(dehli_data) # _make() allow you to instatiate a named tuple from an iterable; City(*delhi_data) would do the same.
+# delhi = City._make(dehli_data) # _make() allow you to instatiate a named tuple from an iterable; City(*delhi_data) would do the same.
 
 # print delhi._asdict() # returns collections.OrderedDict built froom the named tuple instance. That can be used to produce a nice display of city data.
 
@@ -72,7 +75,9 @@ delhi = City._make(dehli_data) # _make() allow you to instatiate a named tuple f
 
 # Tuple as immutable lists.
 
-# Tuples support all list methods except those that add or remove, one exception to this rule is the lack of __reversed__ support. This is just for optimiation reversed(my_tuple) works without it.
+'''
+Tuples support all list methods except those that add or remove, one exception to this rule is the lack of __reversed__ support. This is just for optimiation reversed(my_tuple) works without it.
+'''
 
 # Slice!
 
@@ -97,7 +102,7 @@ del l[5:7]
 l[3::2] = [11,12]
 # print(l)
 
-# When the target of the assignment is a slice, the right side must be an iterable object, even if it's just one item.
+''' When the target of the assignment is a slice, the right side must be an iterable object, even if it's just one item. '''
 
 my_sub_list = ["a"]
 # print(hex(id(my_sub_list)))
@@ -138,21 +143,91 @@ weird_board[1][2] = '0'
 # t[2] += [50, 60]
 # print(t)
 
+'''
 # In python shell, this code results in a tuple object does not support item assignment, but the list at t[2] still gets modified. You can modify this with t[2].extend[50, 60] to make the change without an error
 
 # putting mutable items in tuples is not a good idea.
 # augmented assignment is not an atomic operation -- we just saw it throwing it an excepton after doing part of the job.
 # inspecting Python bytecode is not too difficut, and is often helpful to see what is going on under the hood.
 
-
 ################################################################################
 # This is a great tool to use with students to help breakdown and explain code!
 # http://pythontutor.com/visualize.html#mode=edit
 ################################################################################
+'''
 
-fruits = ["grapes", "strawberries", "oranges", "apples"]
-print sorted(fruits)
-print sorted(fruits, key=len, reverse=True)
-print fruits # sorted is not done in place, but return a new list.
-print fruits.sort() # python convention is for methods are operate in place to return None
-print fruits
+# fruits = ["grapes", "strawberries", "oranges", "apples"]
+# print sorted(fruits)
+# print sorted(fruits, key=len, reverse=True)
+# print fruits # sorted is not done in place, but return a new list.
+# print fruits.sort() # python convention is for methods are operate in place to return None
+# print fruits
+
+# Managing ordered sequences with bisect.
+# bisect does a binary seach, which must be performed on a sorted sequence.
+
+import bisect
+import sys
+
+HAYSTACK = [1,4,5,6,8,12,15,20,21,23,23,26,29,30]
+NEEDLES = [0,1,2,5,8,10,22,23,29,30,31]
+ROW_FMT = '{0:2d} @ {1:2d}    {2}{0:2<d}'
+
+def demo(bisect_fn):
+    for needle in reversed(NEEDLES):
+        position = bisect_fn(HAYSTACK, needle) # Use the chosen bisect function to get the insertion point.
+        offset = position * '  | ' # build a pattern of vertical bars proportional to the offset.
+        print(ROW_FMT.format(needle, position, offset)) # print formatted row showing needle and insertion point
+
+if __name__ == '__main__':
+    if sys.argv[-1] == 'left': # choose the bisect function to use according to the last command-line argument
+        bisect_fn = bisect.bisect_left # python 3 this_file.py left
+    else:
+        bisect_fn = bisect.bisect
+
+# print('DEMO: ', bisect_fn.__name__) # print header with name of function selected
+# print('hk ->',  '  '.join('%2d' % n for n in HAYSTACK))
+# demo(bisect_fn)
+
+# Table lookups by numeric values -- for example, to convert test scores to letter grades.
+
+def grade(score, breakpoints = [60, 70, 80, 90], grades='FDCBA'):
+    i = bisect.bisect(breakpoints, score)
+    return grades[i]
+
+# print [grade(score) for score in [33,99,77,70,89,90,100]]
+
+# Inserting with bisect.insort
+
+
+# import random
+# SIZE = 7
+# random.seed(1729)
+# my_list = []
+# for i in range(SIZE):
+#     new_item = random.randrange(SIZE*2)
+#     bisect.insort(my_list, new_item)
+#     print('%2d -> ' % new_item, my_list)
+
+'''
+If you need to store 10 million floating-point digits, lists might not be the best option, an array would be much more efficient, this is because and array does not actually hold full-fledged float objects, but only the packed bytes representing their machine values, on the other hand, if your constantly adding and removing items from the ends of a list as a FIFO data structure, a deque (double ended queue) works faster.
+'''
+
+# Creating, saving, and loading a large array of floats.
+
+from array import array # import array type
+from random import random
+
+floats = array('d', (random() for i in range(10**7))) # create an array of double precision floats (typecode 'd') from any iterable object -- in this case, a generator expression
+print(floats[-1]) # inspect the last number in the array
+fp = open('floats.bin', 'wb')
+floats.tofile(fp) # save the array to a binary file
+fp.close()
+floats2 = array('d') # create an empty array of doubles
+fp = open('floats.bin', 'rb')
+floats2.fromfile(fp, 10**7) # read 10 million numbers from the binary file
+fp.close()
+
+print(floats2[-1]) # inspect the last number in the array
+
+print(floats2 == floats)
