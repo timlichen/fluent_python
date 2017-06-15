@@ -1,4 +1,5 @@
 # LIST COMPREHENSION
+################################################################################
 
 # colors = ['black', 'white']
 # sizes = ['S', 'M', 'L']
@@ -11,7 +12,9 @@
 #     for size in sizes:
 #         print(color, size)
 
+################################################################################
 # Generator Expressions
+################################################################################
 
 # symbols = '&#$((@(#$*)))'
 # # print tuple(ord(symbol) for symbol in symbols)
@@ -31,7 +34,10 @@
 
 # The key difference here is that the generator expression feeds the for loop producing one item at a time. If the two lists used in the Cartesian produt had 1000 items each, using the generator expression would save the expense of building a list with a million items just to feed it into the loop.
 
+################################################################################
 # Tuples as Records
+################################################################################
+
 fmt = '{:15} | {:^9.4f} |   {:^9.4f}'
 metro_areas = [
     ('Tokyo','JP', 36.933, (35.689722, 139.691667)),
@@ -46,7 +52,9 @@ metro_areas = [
 
 # https://docs.python.org/3.5/library/string.html#formatspec
 
+################################################################################
 # Defining and using a named tuple
+################################################################################
 
 '''
 Instances of classes built with named tuples take exactly the same amount of memory as tuples because the field names are stored in the class. They use less memory than a regular object because they don't store attributes in a per-instance dict.
@@ -73,13 +81,17 @@ print[tokyo[1]]
 # for key, value in delhi._asdict().items():
     # print(key + ":", value)
 
+################################################################################
 # Tuple as immutable lists.
+################################################################################
 
 '''
 Tuples support all list methods except those that add or remove, one exception to this rule is the lack of __reversed__ support. This is just for optimiation reversed(my_tuple) works without it.
 '''
 
+################################################################################
 # Slice!
+################################################################################
 
 # seq.__getitem__(slice(start, stop, step))
 
@@ -155,6 +167,9 @@ weird_board[1][2] = '0'
 # http://pythontutor.com/visualize.html#mode=edit
 ################################################################################
 '''
+################################################################################
+# Sorting lists and arrays
+################################################################################
 
 # fruits = ["grapes", "strawberries", "oranges", "apples"]
 # print sorted(fruits)
@@ -163,8 +178,10 @@ weird_board[1][2] = '0'
 # print fruits.sort() # python convention is for methods are operate in place to return None
 # print fruits
 
+################################################################################
 # Managing ordered sequences with bisect.
-# bisect does a binary seach, which must be performed on a sorted sequence.
+################################################################################
+# bisect does a binary search, which must be performed on a sorted sequence.
 
 import bisect
 import sys
@@ -197,8 +214,9 @@ def grade(score, breakpoints = [60, 70, 80, 90], grades='FDCBA'):
 
 # print [grade(score) for score in [33,99,77,70,89,90,100]]
 
+################################################################################
 # Inserting with bisect.insort
-
+################################################################################
 
 # import random
 # SIZE = 7
@@ -213,21 +231,65 @@ def grade(score, breakpoints = [60, 70, 80, 90], grades='FDCBA'):
 If you need to store 10 million floating-point digits, lists might not be the best option, an array would be much more efficient, this is because and array does not actually hold full-fledged float objects, but only the packed bytes representing their machine values, on the other hand, if your constantly adding and removing items from the ends of a list as a FIFO data structure, a deque (double ended queue) works faster.
 '''
 
+################################################################################
 # Creating, saving, and loading a large array of floats.
+################################################################################
 
-from array import array # import array type
-from random import random
+# from array import array # import array type
+# from random import random
+#
+# floats = array('d', (random() for i in range(10**7))) # create an array of double precision floats (typecode 'd') from any iterable object -- in this case, a generator expression
+# print(floats[-1]) # inspect the last number in the array
+# fp = open('floats.bin', 'wb')
+# floats.tofile(fp) # save the array to a binary file
+# fp.close()
+# floats2 = array('d') # create an empty array of doubles
+# fp = open('floats.bin', 'rb')
+# floats2.fromfile(fp, 10**7) # read 10 million numbers from the binary file
+# fp.close()
+#
+# print(floats2[-1]) # inspect the last number in the array
+#
+# print(floats2 == floats)
 
-floats = array('d', (random() for i in range(10**7))) # create an array of double precision floats (typecode 'd') from any iterable object -- in this case, a generator expression
-print(floats[-1]) # inspect the last number in the array
-fp = open('floats.bin', 'wb')
-floats.tofile(fp) # save the array to a binary file
-fp.close()
-floats2 = array('d') # create an empty array of doubles
-fp = open('floats.bin', 'rb')
-floats2.fromfile(fp, 10**7) # read 10 million numbers from the binary file
-fp.close()
+################################################################################
+# Memory Views
+################################################################################
 
-print(floats2[-1]) # inspect the last number in the array
+'''
+A memoryview is essntiall a generalized NumPy array structure in Python itself (without the math). It allows you to sare memory between data-structures (things like PIL images, SQLite databases, NumPy arrays, etc.) without first copying. This is very important for larger data sets.
+'''
+################################################################################
+# Changing the value of an array item by poking one of its bytes
+################################################################################
 
-print(floats2 == floats)
+# import array
+# numbers = array.array('h', [-257, -1, 32767, 1, 2])
+# memv = memoryview(numbers) # building mem-view from signed integers, typecode 'h' ( signed short 2-byte minimum )
+# # print(len(memv))
+# # print(memv[0]) # memv sees the same 5 elements.
+#
+# memv_oct = memv.cast('B') # casting elements of memv to typecode 'B', ( unsigned char in C Python int type 1-byte minimum )
+#
+# print(memv_oct.tolist()) # export to list for inspection
+# # print("here", memv_oct[0])
+#
+# # memv_oct[4] = 0
+# memv_oct[0] = 4 # assign value 4 to byte offset 5.
+# print(memv_oct.tolist())
+#
+# print(numbers) # A 4 in the most significant byte (octet) of a 2-byte unsigned integer is 1024.
+
+import numpy
+''' Basic opetions with rows and columns in numpy.ndarray '''
+a = numpy.arange(12)
+print(a)
+type(a)
+print(a.shape)
+
+a.shape = 3, 4
+print(a)
+print(a[2])
+print(a[2, 1])
+print(a[:, 1]) # get column at index 1
+print(a.transpose()) # create a new array b transposing (swapping columns with rows).
